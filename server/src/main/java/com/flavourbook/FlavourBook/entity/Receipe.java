@@ -5,34 +5,29 @@ import lombok.Data;
 
 import java.util.List;
 
-@Data
 @Entity
+@Data
+@Table(name = "recipes")
 public class Receipe {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String title;
+    @Column(nullable = false)
+    private String name;
 
     @Column(columnDefinition = "TEXT")
     private String description;
 
-    @Column(columnDefinition = "JSON")
-    private String ingredients;
+    @ElementCollection
+    @CollectionTable(name = "recipe_ingredients", joinColumns = @JoinColumn(name = "recipe_id"))
+    @Column(name = "ingredient")
+    private List<String> ingredients;
 
-    @Column(columnDefinition = "JSON")
-    private String steps;
-
-    private int prepTime;
-
-    private int cookTime;
-
-    private int totalTime;
+    @Column(nullable = false, length = 1000)
+    private String instructions;
 
     @ManyToOne
     @JoinColumn(name = "category_id", nullable = false)
-    private Category category;
-
-    @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL)
-    private List<Comment> comments;
+    private ReceipeCategory category;
 }

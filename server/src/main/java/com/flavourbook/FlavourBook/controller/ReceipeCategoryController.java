@@ -1,33 +1,44 @@
 package com.flavourbook.FlavourBook.controller;
 
 import com.flavourbook.FlavourBook.dto.ReceipeCategoryDTO;
-import com.flavourbook.FlavourBook.entity.Category;
-import com.flavourbook.FlavourBook.entity.Receipe;
+import com.flavourbook.FlavourBook.dto.ReceipeDTO;
+import com.flavourbook.FlavourBook.entity.ReceipeCategory;
 import com.flavourbook.FlavourBook.services.ReceipeCategoryService;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/categories")
-@RequiredArgsConstructor
+@RequestMapping("/api/categories")
 public class ReceipeCategoryController {
-    private final ReceipeCategoryService categoryService;
 
-    @PostMapping
-    public ResponseEntity<Category> addCategory(@RequestBody ReceipeCategoryDTO categoryDTO) {
-        return ResponseEntity.ok(categoryService.addCategory(categoryDTO));
-    }
+    @Autowired
+    private ReceipeCategoryService receipeCategoryService;
 
     @GetMapping
-    public ResponseEntity<List<Category>> getAllCategories() {
-        return ResponseEntity.ok(categoryService.getAllCategories());
+    public ResponseEntity<List<ReceipeCategoryDTO>> getAllCategories() {
+        List<ReceipeCategoryDTO> categories = receipeCategoryService.getAllCategories();
+        return ResponseEntity.ok(categories);
     }
 
-    @GetMapping("/{id}/recipes")
-    public ResponseEntity<List<Receipe>> getRecipesByCategory(@PathVariable Long id) {
-        return ResponseEntity.ok(categoryService.getRecipesByCategory(id));
+    @GetMapping("/{id}")
+    public ResponseEntity<ReceipeCategoryDTO> getCategoryById(@PathVariable Long id) {
+        ReceipeCategoryDTO categoryDTO = receipeCategoryService.getCategoryById(id);
+        return ResponseEntity.ok(categoryDTO);
     }
+
+    @PostMapping
+    public ResponseEntity<ReceipeCategoryDTO> addCategory(@RequestBody ReceipeCategoryDTO categoryDTO) {
+        ReceipeCategoryDTO savedCategory = receipeCategoryService.addCategory(categoryDTO);
+        return ResponseEntity.ok(savedCategory);
+    }
+
+    @GetMapping("/search/name")
+    public ResponseEntity<List<ReceipeCategoryDTO>> searchByName(@RequestParam String name) {
+        List<ReceipeCategoryDTO> categories = receipeCategoryService.searchByName(name);
+        return ResponseEntity.ok(categories);
+    }
+
 }
