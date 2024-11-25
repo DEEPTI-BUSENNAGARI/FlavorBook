@@ -53,6 +53,26 @@ public class ReceipeService {
                 .collect(Collectors.toList());
     }
 
+    public ReceipeDTO updateRecipe(Long id, ReceipeDTO receipeDTO) {
+        Receipe receipe = receipeRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Recipe not found with ID: " + id));
+
+        // Update fields
+        receipe.setName(receipeDTO.getName());
+        receipe.setDescription(receipeDTO.getDescription());
+        receipe.setIngredients(receipeDTO.getIngredients());
+        receipe.setInstructions(receipeDTO.getInstructions());
+
+        // Update category if provided
+        if (receipeDTO.getCategoryId() != null) {
+            ReceipeCategory category = recipeCategoryRepository.findById(receipeDTO.getCategoryId())
+                    .orElseThrow(() -> new RuntimeException("Category not found"));
+            receipe.setCategory(category);
+        }
+
+        Receipe updatedReceipe = receipeRepository.save(receipe);
+        return toDTO(updatedReceipe);
+    }
 
 
 
