@@ -31,6 +31,13 @@ public class ReceipeController {
         return ResponseEntity.ok(savedReceipe);
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<ReceipeDTO> updateRecipe(@PathVariable Long id, @RequestBody ReceipeDTO receipeDTO) {
+        ReceipeDTO updatedReceipe = receipeService.updateRecipe(id, receipeDTO);
+        return ResponseEntity.ok(updatedReceipe);
+    }
+
+
     @GetMapping("/search/name")
     public ResponseEntity<List<ReceipeDTO>> searchByName(@RequestParam String name) {
         return ResponseEntity.ok(receipeService.searchByName(name));
