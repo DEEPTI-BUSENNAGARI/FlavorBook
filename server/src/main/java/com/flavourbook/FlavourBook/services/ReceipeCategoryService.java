@@ -2,12 +2,14 @@ package com.flavourbook.FlavourBook.services;
 
 import com.flavourbook.FlavourBook.dto.ReceipeCategoryDTO;
 import com.flavourbook.FlavourBook.dto.ReceipeDTO;
+import com.flavourbook.FlavourBook.entity.ImageModel;
 import com.flavourbook.FlavourBook.entity.ReceipeCategory;
 import com.flavourbook.FlavourBook.repository.ReceipeCategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -28,11 +30,21 @@ public class ReceipeCategoryService {
                 .orElseThrow(() -> new RuntimeException("Recipe category not found with ID: " + id));
     }
 
-    public ReceipeCategoryDTO addCategory(ReceipeCategoryDTO categoryDTO) {
+//    public ReceipeCategoryDTO addCategory(ReceipeCategoryDTO categoryDTO) {
+//        ReceipeCategory category = new ReceipeCategory();
+//        category.setName(categoryDTO.getName());
+//        category.setDescription(categoryDTO.getDescription());
+//        return toDTO(recipeCategoryRepository.save(category));
+//    }
+
+    public ReceipeCategoryDTO addCategoryWithImages(ReceipeCategoryDTO categoryDTO, Set<ImageModel> images) {
         ReceipeCategory category = new ReceipeCategory();
         category.setName(categoryDTO.getName());
         category.setDescription(categoryDTO.getDescription());
-        return toDTO(recipeCategoryRepository.save(category));
+        category.setImages(images);
+
+        ReceipeCategory savedCategory = recipeCategoryRepository.save(category);
+        return toDTO(savedCategory);
     }
 
     public List<ReceipeCategoryDTO> searchByName(String name) {

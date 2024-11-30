@@ -30,4 +30,8 @@ public class Receipe {
     @ManyToOne
     @JoinColumn(name = "category_id", nullable = false)
     private ReceipeCategory category;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "image_id", referencedColumnName = "id")
+    private ImageModel image;
 }
